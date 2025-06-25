@@ -1,5 +1,5 @@
 import argparse
-from scapy.all import conf, IFACES, get_if_hwaddr
+from scapy.all import conf, get_if_hwaddr
 from ethernet_layer import ethernet_management
 
 DATA_INDEX = 1
@@ -10,7 +10,6 @@ def sniffer_manager(iface_index: int) -> None:
     sniff manager
     :param iface_index: the iface index in IFACES list to sniff from
     """
-
     try:
         iface = conf.ifaces.dev_from_index(iface_index)
     except ValueError:
@@ -20,23 +19,22 @@ def sniffer_manager(iface_index: int) -> None:
     sock = conf.L2socket(iface=iface, promisc=True)
     while True:
         recv = sock.recv_raw()
-        ethernet_management(mac_address, recv[DATA_INDEX])
+        if recv != (None, None, None):
+            ethernet_management(mac_address, recv[DATA_INDEX])
 
 
 
 
 def get_args():
     parser = argparse.ArgumentParser(description='raw data packet parser')
-    parser.add_argument('iface index', type=str,
-                        help='iface name')
+    parser.add_argument('iface_index', type=str,
+                        help='iface index in IFACES list ')
     return parser.parse_args()
 
 
 def main():
     args = get_args()
-    #print(IFACES.show())
-    #iface_index = input("choose iface by index: ")
-    sniffer_manager(args.iface)
+    sniffer_manager(args.iface_index)
 
 
 if __name__ == "__main__":

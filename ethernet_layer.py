@@ -1,4 +1,4 @@
-from third_layer_manage import third_layer_managment
+from third_layer_manage import third_layer_management
 
 DST_MAC_END_INDEX = 6
 BLANK_STR = ""
@@ -11,7 +11,7 @@ def ethernet_management(mac_address: str, data: bytes) -> None:
     :param data: data recieved from sniffer, the frame itself
     """
     if check_dst_mac(mac_address, data):
-        third_layer_managment(data)
+        third_layer_management(data)
 
 
 def check_dst_mac(mac: str, recieved_message: bytes) -> bool:
