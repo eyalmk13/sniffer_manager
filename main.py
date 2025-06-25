@@ -1,6 +1,8 @@
 import argparse
 from scapy.all import conf, get_if_hwaddr
-from ethernet_layer import ethernet_management
+from scapy.arch import get_if_addr
+
+from ether_layer import ethernet_management
 
 DATA_INDEX = 1
 
@@ -16,11 +18,12 @@ def sniffer_manager(iface_index: int) -> None:
         print("Invalid interface index")
         return
     mac_address = get_if_hwaddr(iface)
+    my_ip = get_if_addr(iface)
     sock = conf.L2socket(iface=iface, promisc=True)
     while True:
         recv = sock.recv_raw()
         if recv != (None, None, None):
-            ethernet_management(mac_address, recv[DATA_INDEX])
+            ethernet_management(mac_address, recv[DATA_INDEX], my_ip, sock)
 
 
 
